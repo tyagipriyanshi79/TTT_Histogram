@@ -3,41 +3,41 @@ import axios from "axios";
 import BarChart from "./Chart";
 function App() {
   const [data, setData] = useState([]);
+  const fetchData = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://www.terriblytinytales.com/test.txt"
+      );
+      let output = {};
+      let strArr = data.split(" ");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(
-          "https://www.terriblytinytales.com/test.txt"
-        );
-        let output = {};
-        let strArr = data.split(" ");
-
-        for (var i = 0; i < strArr.length; i++) {
-          var word = strArr[i];
-          if (output[word] === undefined) {
-            output[word] = 1;
-          } else {
-            output[word] += 1;
-          }
+      for (var i = 0; i < strArr.length; i++) {
+        var word = strArr[i];
+        if (output[word] === undefined) {
+          output[word] = 1;
+        } else {
+          output[word] += 1;
         }
-
-        let filterData = Object.keys(output).map((word) => {
-          return { key: word, freq: output[word] };
-        });
-
-        filterData.sort((a, b) => parseFloat(b.freq) - parseFloat(a.freq));
-        console.log(filterData.slice(0, 20));
-        setData(filterData.slice(0, 20));
-      } catch (error) {
-        console.log(error);
       }
-    };
+
+      let filterData = Object.keys(output).map((word) => {
+        return { key: word, freq: output[word] };
+      });
+
+      filterData.sort((a, b) => parseFloat(b.freq) - parseFloat(a.freq));
+      console.log(filterData.slice(0, 20));
+      setData(filterData.slice(0, 20));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  /*useEffect(() => {
     fetchData();
-  }, []);
+  }, []);*/
 
   return (
     <div>
+      <button onClick={fetchData}>Graph</button>
       <BarChart data={data} />
     </div>
   );
